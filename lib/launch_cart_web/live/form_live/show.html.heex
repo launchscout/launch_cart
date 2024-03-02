@@ -30,14 +30,7 @@
   <%= live_redirect "View reponses", to: Routes.form_form_responses_path(@socket, :index, @form) %>
 </p>
 
-<p>Form responses will be sent to these end points:</p>
-
-<.web_hooks id="web-hooks" web-hooks={@form.web_hooks}></.web_hooks>
-
-<p>Form responses will be sent to these email addresses:</p>
-
-<.form_emails id="form-emails" form-emails={@form.form_emails}></.form_emails>
-
+<.link patch={~p"/forms/#{@form.id}/wasm_handlers"}>WASM Form Handlers</.link>
 
 <h2 class="u-push__top--xl">Usage:</h2>
 <p>Using your Launch Form is easy! </p>

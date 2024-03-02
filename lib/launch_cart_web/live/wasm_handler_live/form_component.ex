@@ -22,6 +22,7 @@ defmodule LaunchCartWeb.WasmHandlerLive.FormComponent do
         phx-submit="save"
       >
         <.input type="hidden" field={@form[:form_id]} value={@form_id} />
+        <.input type="text" field={@form[:description]} label="Description" />
         <.live_file_input upload={@uploads.wasm}/>
 
         <:actions>

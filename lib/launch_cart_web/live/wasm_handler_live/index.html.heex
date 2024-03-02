@@ -2,7 +2,7 @@
   Listing Wasm handlers
   <:actions>
     <.link patch={~p"/forms/#{@form_id}/wasm_handlers/new"}>
-      <.button>New Wasm handler</.button>
+      New WASM Handler
     </.link>
   </:actions>
 </.header>
@@ -12,7 +12,7 @@
   rows={@streams.wasm_handlers}
   row_click={fn {_id, wasm_handler} -> JS.navigate(~p"/forms/#{@form_id}/wasm_handlers/#{wasm_handler}") end}
 >
-  <:col :let={{_id, wasm_handler}} label="Wasm">Filename goes here</:col>
+  <:col :let={{_id, wasm_handler}} label="Description"><%= wasm_handler.description %></:col>
   <:action :let={{_id, wasm_handler}}>
     <div class="sr-only">
       <.link navigate={~p"/wasm_handlers/#{wasm_handler}"}>Show</.link>

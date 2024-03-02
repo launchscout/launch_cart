@@ -11,6 +11,7 @@ defmodule LaunchCart.Forms.WasmHandler do
   @foreign_key_type :binary_id
   schema "wasm_handlers" do
     field :wasm, Wasm.Type
+    field :description, :string
     belongs_to :form, Form
 
     timestamps()
@@ -19,8 +20,8 @@ defmodule LaunchCart.Forms.WasmHandler do
   @doc false
   def changeset(wasm_handler, attrs) do
     wasm_handler
-    |> cast(attrs, [:form_id])
+    |> cast(attrs, [:form_id, :description])
     |> cast_attachments(attrs, [:wasm], allow_paths: true)
-    |> validate_required([:form_id])
+    |> validate_required([:form_id, :description])
   end
 end
