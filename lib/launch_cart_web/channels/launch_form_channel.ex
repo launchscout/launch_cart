@@ -13,8 +13,8 @@ defmodule LaunchCartWeb.LaunchFormChannel do
         %{form_id: form_id}
       ) do
     with form <- Forms.get_form!(form_id),
-         {:ok, _response} <- Forms.submit_response(form, form_data) do
-      {:noreply, %{complete: true}}
+         {:ok, result, _response} <- Forms.submit_response(form, form_data) do
+      {:noreply, Map.merge(result, %{complete: true})}
     end
   end
 end

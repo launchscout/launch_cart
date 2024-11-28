@@ -4,7 +4,7 @@ import { liveState, liveStateConfig } from 'phx-live-state';
 
 @customElement('launch-form')
 @liveState({
-  properties: ['complete'],
+  properties: ['complete', 'result'],
   provide: {
     scope: window,
     name: 'launchFormState'
@@ -22,6 +22,9 @@ export class LaunchFormElement extends LitElement {
 
   @state()
   complete: boolean = false;
+
+  @state()
+  result: string = 'Thanks for your submission!';
 
   @property({ attribute: 'form-id' })
   formId: string = '';
@@ -43,6 +46,10 @@ export class LaunchFormElement extends LitElement {
   }
 
   render() {
-    return this.complete ? html`<slot name="success">Thanks for your submission!</slot>` : html`<slot></slot>`;
+    if (this.complete) {
+      return html`<slot name="success">${this.result}</slot>`
+    } else {
+      return html`<slot></slot>`;
+    } 
   }
 }

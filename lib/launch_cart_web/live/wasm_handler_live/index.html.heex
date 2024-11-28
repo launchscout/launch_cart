@@ -1,16 +1,21 @@
 <.header>
   Listing Wasm handlers
-  <:actions>
-    <.link patch={~p"/forms/#{@form_id}/wasm_handlers/new"}>
-      New WASM Handler
-    </.link>
-  </:actions>
 </.header>
+<.link navigate={~p"/forms/#{@form_id}/wasm_handlers/new"}>
+  New WASM Handler
+</.link>
 
+<.link navigate={~p"/forms/#{@form_id}"}>
+  Back
+</.link>
 <.table
   id="wasm_handlers"
   rows={@streams.wasm_handlers}
-  row_click={fn {_id, wasm_handler} -> JS.navigate(~p"/forms/#{@form_id}/wasm_handlers/#{wasm_handler}") end}
+  row_click={
+    fn {_id, wasm_handler} ->
+      JS.navigate(~p"/forms/#{@form_id}/wasm_handlers/#{wasm_handler}")
+    end
+  }
 >
   <:col :let={{_id, wasm_handler}} label="Description"><%= wasm_handler.description %></:col>
   <:action :let={{_id, wasm_handler}}>
@@ -29,7 +34,12 @@
   </:action>
 </.table>
 
-<.modal :if={@live_action in [:new, :edit]} id="wasm_handler-modal" show on_cancel={JS.patch(~p"/wasm_handlers")}>
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="wasm_handler-modal"
+  show
+  on_cancel={JS.patch(~p"/wasm_handlers")}
+>
   <.live_component
     module={LaunchCartWeb.WasmHandlerLive.FormComponent}
     id={@wasm_handler.id || :new}

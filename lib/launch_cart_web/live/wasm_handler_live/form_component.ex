@@ -42,7 +42,7 @@ defmodule LaunchCartWeb.WasmHandlerLive.FormComponent do
      |> assign(:form_id, form_id)
      |> assign(assigns)
      |> assign_form(changeset)
-     |> allow_upload(:wasm, accept: ~w(.wasm))}
+     |> allow_upload(:wasm, accept: ~w(.wasm), max_file_size: 100_000_000)}
   end
 
   @impl true
@@ -51,6 +51,7 @@ defmodule LaunchCartWeb.WasmHandlerLive.FormComponent do
       socket.assigns.wasm_handler
       |> Forms.change_wasm_handler(wasm_handler_params)
       |> Map.put(:action, :validate)
+      |> IO.inspect(label: "changeset in validate")
 
     {:noreply, assign_form(socket, changeset)}
   end
@@ -78,6 +79,7 @@ defmodule LaunchCartWeb.WasmHandlerLive.FormComponent do
          |> push_patch(to: socket.assigns.patch)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
+        IO.inspect(changeset)
         {:noreply, assign_form(socket, changeset)}
     end
   end
@@ -93,6 +95,8 @@ defmodule LaunchCartWeb.WasmHandlerLive.FormComponent do
          |> push_patch(to: socket.assigns.patch)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
+        IO.inspect(changeset)
+
         {:noreply, assign_form(socket, changeset)}
     end
   end

@@ -4,6 +4,7 @@ defmodule LaunchCart.Forms do
   """
 
   import Ecto.Query, warn: false
+  alias LaunchCart.Forms.WasmComponentHandler
   alias LaunchCart.Repo
 
   alias LaunchCart.Forms.{Form, FormEmail, FormMailer, FormResponse, WasmHandler}
@@ -41,7 +42,8 @@ defmodule LaunchCart.Forms do
       ** (Ecto.NoResultsError)
 
   """
-  def get_form!(id), do: Repo.get!(Form, id) |> Repo.preload([:web_hooks, :form_emails, :wasm_handlers])
+  def get_form!(id),
+    do: Repo.get!(Form, id) |> Repo.preload([:web_hooks, :form_emails, :wasm_handlers])
 
   def get_form_responses!(id) do
     Repo.all(from form_response in FormResponse, where: form_response.form_id == ^id)
@@ -228,8 +230,8 @@ defmodule LaunchCart.Forms do
     with {:ok, form_response} <- create_form_response(%{form_id: form_id, response: response}) do
       send_web_hooks(web_hooks, response)
       send_emails(form_emails, response)
-      fire_wasm_handlers(wasm_handlers, response)
-      {:ok, form_response}
+      result = fire_wasm_handlers(wasm_handlers, response)
+      {:ok, result, form_response}
     end
   end
 
@@ -246,13 +248,23 @@ defmodule LaunchCart.Forms do
   end
 
   defp fire_wasm_handlers(wasm_handlers, response) do
-    wasm_handlers |> Enum.map(&fire_wasm_handler(&1, response))
+    wasm_handlers
+    |> Enum.reduce(%{}, &fire_wasm_handler(&1, &2, response))
+    |> IO.inspect(label: "reduce result")
   end
 
-  defp fire_wasm_handler(%WasmHandler{wasm: %{file_name: file_name}}, response) do
-    manifest = %{wasm: [%{path: "./priv/static/uploads/#{file_name}"}], allowed_hosts: ["*"]}
-    {:ok, plugin} = Extism.Plugin.new(manifest, true)
-    Extism.Plugin.call(plugin, "handleForm", response |> Jason.encode!())
+  defp fire_wasm_handler(%WasmHandler{wasm: %{file_name: file_name}}, acc, response) do
+    component_bytes = File.read!("./priv/static/uploads/#{file_name}")
+    {:ok, form_handler} = WasmComponentHandler.new(component_bytes)
+    IO.inspect(response, label: "response passed to handler")
+
+    result =
+      WasmComponentHandler.handle_submit(
+        form_handler,
+        response |> Enum.map(fn {k, v} -> {to_string(k), [v]} end) |> Enum.into([])
+      )
+
+    %{result: result}
   end
 
   defp preload(%Form{} = form), do: Repo.preload(form, [:web_hooks, :form_emails])

@@ -64,7 +64,7 @@ defmodule LaunchCart.MixProject do
       {:live_elements, ">= 0.0.0"},
       {:waffle, ">= 0.0.0"},
       {:waffle_ecto, ">= 0.0.0"},
-      {:extism, "1.0.0"},
+      {:wasm_components_ex, path: "../wasm_components_ex"},
       {:wallaby, "~> 0.30.2",
        git: "https://github.com/launchscout/wallaby.git",
        branch: "shadow-dom",

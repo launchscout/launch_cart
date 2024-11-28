@@ -1,0 +1,8 @@
+package local:form-handler;
+
+world form-handler {
+  type form-value = tuple<string, list<string>>;
+  // type form-error = tuple<u32, string>;
+  // type form-result = tuple<outcome, string>;
+  export handle-submit: func(form-data: list<form-value>) -> string;
+}

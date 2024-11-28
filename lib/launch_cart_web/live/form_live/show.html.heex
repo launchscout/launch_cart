@@ -30,7 +30,7 @@
   <%= live_redirect "View reponses", to: Routes.form_form_responses_path(@socket, :index, @form) %>
 </p>
 
-<.link patch={~p"/forms/#{@form.id}/wasm_handlers"}>WASM Form Handlers</.link>
+<.link navigate={~p"/forms/#{@form.id}/wasm_handlers"}>WASM Form Handlers</.link>
 
 <h2 class="u-push__top--xl">Usage:</h2>
 <p>Using your Launch Form is easy! </p>
